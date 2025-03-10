@@ -1,0 +1,37 @@
+{
+  "dataspaceName" : "GAIA",
+  "type" : "PARAMETER",
+  "id" : "082487bf-4268-47e0-9277-f432be56d428",
+  "definition" : {
+    "id" : 49,
+    "name" : "GFSD1212",
+    "description" : "FSS1/FSS2 AZ delta",
+    "engUnit" : "Deg",
+    "dataCategory" : "FLOAT",
+    "rawDataCategory" : "FLOAT",
+    "active" : true,
+    "systemElement" : "TM",
+    "uuid" : null
+  },
+  "startTime" : "2016-01-01T00:00:00Z",
+  "endTime" : "2020-01-01T00:00:00Z",
+  "samples" : [ {
+    "state" : 0,
+    "vFlt" : -0.0575395,
+    "rawVFlt" : -0.057539523,
+    "parentId" : 0,
+    "parentGenTime" : 1451606406644096,
+    "validity" : "VALID",
+    "storageTime" : 1451687907525372,
+    "genTime" : 1451606406644096
+  }, {
+    "state" : 0,
+    "vFlt" : -0.0278011,
+    "rawVFlt" : -0.027801096,
+    "parentId" : 0,
+    "parentGenTime" : 1451606416644096,
+    "validity" : "VALID",
+    "storageTime" : 1451687909948154,
+    "genTime" : 1451606416644096
+  }]
+}
