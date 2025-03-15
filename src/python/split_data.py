@@ -6,11 +6,15 @@ from data_processor import process_data
 
 DATA_LOCATION = '../../data/training/'
 
-def split_data(df, column_name):
+def split_data(df, column_name, sample_fraction=0.1):
+    
+    # Sample a fraction of the data for initial testing
+    df_sampled = df.sample(frac=sample_fraction, random_state=42)
+
     # Calculate the train size and split data
-    train_size = int(len(df) * 0.8)
-    train = df.iloc[:train_size]
-    test = df.iloc[train_size:]
+    train_size = int(len(df_sampled) * 0.8)
+    train = df_sampled.iloc[:train_size]
+    test = df_sampled.iloc[train_size:]
 
     # Further split the train data into training and validation sets
     val_size = int(len(train) * 0.2)
