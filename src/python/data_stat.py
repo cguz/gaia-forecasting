@@ -1,40 +1,43 @@
 import pandas as pd
 import glob
+import argparse
+from file_reader import read_csv_files
 
-# Create a list of file names.  Adjust path as needed.
-file_names = glob.glob("../../data/pre-processed/GFSD1115.*.csv")
-# Initialize an empty list to hold dataframes
-dfs = []
+def calculate_statistics(combined_df, data_column, timestamp_column):
+    # Calculate descriptive statistics
+    description = combined_df[data_column].describe()
+    print("Descriptive Statistics:\n", description)
 
-# Loop for every file
-for file_name in file_names:
-    # Load each CSV file into a pandas DataFrame
-    df = pd.read_csv(file_name)
+    # Find the start and end dates
+    start_date = combined_df[timestamp_column].min()
+    end_date = combined_df[timestamp_column].max()
 
-    # Convert 'Timestamp' column to datetime objects (assuming microseconds)
-    df['Timestamp'] = pd.to_datetime(df['Timestamp'], unit='us')
+    print("\nStart Date:", start_date)
+    print("End Date:", end_date)
 
-    # Append the current dataframe to the list
-    dfs.append(df)
+    # Sort the DataFrame by 'Timestamp'
+    combined_df = combined_df.sort_values(by=timestamp_column)
+    print("\nFirst 5 rows of sorted data:\n", combined_df.head())
 
-# Concatenate all dataframes in the list into a single dataframe
-combined_df = pd.concat(dfs, ignore_index=True)
+    # Check for duplicated timestamps
+    duplicates = combined_df.duplicated(subset=[timestamp_column], keep=False)
+    print("\nDuplicated Timestamps (if any):\n", combined_df[duplicates])
 
-# Calculate descriptive statistics
-description = combined_df['GFSD1115'].describe()
-print("Descriptive Statistics:\n", description)
+def main(base_filename, data_column):
+    num_files = len(glob.glob(f"{base_filename}.*.csv"))
 
-# Find the start and end dates
-start_date = combined_df['Timestamp'].min()
-end_date = combined_df['Timestamp'].max()
+    all_data = read_csv_files(base_filename, num_files)
+    if all_data:
+        combined_df = pd.concat(all_data, ignore_index=True)
+        calculate_statistics(combined_df, data_column, "Timestamp")
+    else:
+        print("No data to process.")
 
-print("\nStart Date:", start_date)
-print("End Date:", end_date)
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Calculate statistics from multiple CSV files.')
+    parser.add_argument('base_filename', type=str, help='The base name of the CSV files')
+    parser.add_argument('data_column', type=str, help='The name of the data column')
 
-# Sort the DataFrame by 'Timestamp'
-combined_df = combined_df.sort_values(by='Timestamp')
-print("\nFirst 5 rows of sorted data:\n", combined_df.head())
+    args = parser.parse_args()
 
-# check for duplicated timestamps
-duplicates = combined_df.duplicated(subset=['Timestamp'], keep=False)
-print("\nDuplicated Timestamps (if any):\n", combined_df[duplicates])
+    main(args.base_filename, args.data_column)

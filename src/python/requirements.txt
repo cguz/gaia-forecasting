@@ -2,3 +2,6 @@
 pandas
 matplotlib
 PyQt6 
+prophet
+scikit-learn
+plotly
